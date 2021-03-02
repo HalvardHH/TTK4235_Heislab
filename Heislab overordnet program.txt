@@ -1,0 +1,52 @@
+Må finnes en ENUM med state navn. 
+Elevator_program: 
+
+Initialize elevator 
+While(1){
+	if (Stop_signal)
+		Stopp motor, behold retning, sett state stop_button 
+	
+	Sjekk for nye ordre, og legg til i bestillingsliste på rett plass. 
+	
+Switch Case: 
+	Case idle: 
+	Sjekk bestillingskø
+		if bestilling - sett fart og retning og state = moving
+ 	Case moving: 
+	if nådd/i en etasje 
+		etasjelys på, og slukk forrige 
+		
+			if etasjen var bestilt 
+			slå av bestillingslys 
+			slå av motor,behold retning 
+			slett bestilling 
+			åpne dør 
+			State = Door_open;  
+
+	Case Door_open 
+	Lag en timer på 3 sekunder om den ikke allerede finnes.  
+	if obstruksjon 
+		restart timer 
+	else
+		if timer ikke er startet 
+			start timer 
+	if timer er ferdig 
+		lukk døren 
+		state = idle; 
+	
+	Case Stop_button_pressed 
+	Do: 
+		slett ubetjente bestillinger
+		fjern bestillingslys 
+		lag Bool Between_floors = True; 
+		if ( i en etasje ) 
+		åpne døra
+		Between_floors = False; 
+	While(stoppknappen er trykket inn):
+		blir her 
+	
+	if (Between_floors = True;) 
+		state = idle;
+	else 
+		state = Door_open;
+	
