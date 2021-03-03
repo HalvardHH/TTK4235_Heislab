@@ -1,5 +1,6 @@
 #include "switch_case.h"
 #include "timer.c"
+#include "stdio.h"
 
 ElevatorState elevator_state; 
 int timer_already_started = 0; 
@@ -9,14 +10,18 @@ int timer_duration = 3;
 switch (elevator_state)
 {
 case STATE_IDLE:
-    /* code */
+    printf("STATE_IDLE");
+
     break;
 
 case STATE_MOVING:
+    printf("STATE_MOVING");
 
     break;
 
 case STATE_DOOR_OPEN:
+    printf("STATE_STOP_BUTTON_PRESSED");
+
     if (!timer_already_started){
         timer_start = get_time();
         timer_already_started = 1; 
@@ -32,9 +37,11 @@ case STATE_DOOR_OPEN:
     break;
 
 case STATE_STOP_BUTTON_PRESSED:
+    printf("STATE_STOP_BUTTON_PRESSED");
 
     break;
-
-default:
-    break;
+default: 
+    printf("NO VALID CASE");
+    
 }
+
