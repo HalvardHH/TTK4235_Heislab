@@ -11,5 +11,6 @@ typedef enum {
     STATE_STOP_BUTTON_PRESSED,
     
 } ElevatorState;
-
-void door_timer(time_t* timer_start, int timer_duration, int* timer_already_started, ElevatorState* elevator_state);
+void clear_all_order_lights();
+int door_timer(clock_t* timer_start, int timer_duration, int* timer_already_started);
+int stop_button_handler();

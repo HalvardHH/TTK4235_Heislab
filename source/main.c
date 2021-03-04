@@ -14,10 +14,18 @@ int main(){
     }
     ElevatorState elevator_state; 
     int timer_already_started = 0; 
-    time_t timer_start; 
-    int timer_duration = 3; 
+    clock_t timer_start; 
+    double timer_duration = 3; 
 
-    hardware_command_door_open(1); 
+    hardware_command_door_open(1); //TESTING
+    hardware_command_order_light(0, HARDWARE_ORDER_INSIDE, 1);
+    hardware_command_order_light(1, HARDWARE_ORDER_INSIDE, 1);
+    hardware_command_order_light(2, HARDWARE_ORDER_INSIDE, 1);
+    hardware_command_order_light(3, HARDWARE_ORDER_INSIDE, 1);
+    hardware_command_order_light(1, HARDWARE_ORDER_UP, 1);
+    hardware_command_order_light(2, HARDWARE_ORDER_DOWN, 1);
+
+
     printf("Opening the door");
     elevator_state = STATE_DOOR_OPEN;
     while(1){
@@ -37,15 +45,19 @@ int main(){
             break;
 
         case STATE_DOOR_OPEN:
-            door_timer(&timer_start, timer_duration, &timer_already_started, &elevator_state);
+            if (door_timer(&timer_start, timer_duration, &timer_already_started)){
+                hardware_command_door_open(0); //closes door
+                elevator_state = STATE_IDLE;
+            }
             break;
 
         case STATE_STOP_BUTTON_PRESSED:
-            hardware_command_stop_light(1);
-            
-            
-            hardware_command_stop_light(0);
-            exit(1);
+            if (stop_button_handler()){
+                elevator_state = STATE_IDLE;
+            }
+            else{
+                elevator_state = STATE_DOOR_OPEN;
+            }
             break;
         default: 
             printf("NO VALID CASE");
