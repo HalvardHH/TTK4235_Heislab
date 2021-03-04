@@ -5,7 +5,7 @@
  */
 time_t get_time(){
     return time(NULL);
-};
+}
 
 /**
  * @brief Checks if a timer is done
@@ -20,5 +20,5 @@ int check_timer_done(time_t start, double duration){
     else{
         return 0; 
     }
-};
+}
 
