@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "hardware.h"
 #include "elevator.h"
+#include "order_queue.h"
 
 
 
@@ -17,6 +18,10 @@ int main(){
     clock_t timer_start; 
     double timer_duration = 3; 
 
+    queue_node test_order;
+    test_order.floor = 3;
+    test_order.order_type = HARDWARE_ORDER_INSIDE;
+
     hardware_command_door_open(1); //TESTING
     hardware_command_order_light(0, HARDWARE_ORDER_INSIDE, 1);
     hardware_command_order_light(1, HARDWARE_ORDER_INSIDE, 1);
@@ -31,13 +36,16 @@ int main(){
     while(1){
         if(hardware_read_stop_signal()){
             elevator_state = STATE_STOP_BUTTON_PRESSED;
+            break;
         }
 
         
         switch (elevator_state)
         {
         case STATE_IDLE:
-
+            if (excecute_order_from_idle(test_order)){
+                elevator_state = STATE_MOVING;
+            }
             break;
 
         case STATE_MOVING:
@@ -58,6 +66,7 @@ int main(){
             else{
                 elevator_state = STATE_DOOR_OPEN;
             }
+        
             break;
         default: 
             printf("NO VALID CASE");

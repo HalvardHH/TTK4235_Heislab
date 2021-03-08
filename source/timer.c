@@ -1,5 +1,10 @@
 #include <stdlib.h> 
 #include <time.h>
+/** 
+ * @file
+ * @brief Timer library
+ */
+ 
 /**
  * @brief Returns current time.
  */
