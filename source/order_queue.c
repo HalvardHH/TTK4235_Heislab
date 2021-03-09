@@ -3,9 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/**
- * @brief Adds an order to the front of the list
- */
+
 void push (queue_node ** head, int floor, HardwareOrder order_type){
     if ((*head) == NULL){
         (*head) = malloc(sizeof(queue_node));
@@ -24,9 +22,7 @@ void push (queue_node ** head, int floor, HardwareOrder order_type){
     new_queue_node->next = *head; 
     (*head) = new_queue_node;
 }
-/**
- * @brief Removes the first order.
- */
+
 void pop(queue_node ** head){
     if ((*head) == NULL){
         return;
@@ -35,9 +31,7 @@ void pop(queue_node ** head){
     free(*head);
     *head = next_node; 
 }
-/**
- * @brief Removes a spesific order with index i. Head is 0. 
- */
+
 void remove_indexed(queue_node **head, int n){
     queue_node* current = *head; 
 
@@ -82,28 +76,13 @@ void complete_orders_floor(queue_node **head, int floor){
 }
 
 
-
-queue_node add_node(int floor, HardwareOrder order_type, queue_node* head) {
-    queue_node order;
-    order.floor = floor;
-    order.order_type = order_type;
-    head->next = &order;
-    return order;
-}
-
-void update_orders(queue_node* head) {
-    for (int i = 0; i < 4; i++) {
-        if (hardware_read_order(i, HARDWARE_ORDER_INSIDE)) {
-            add_node(i,HARDWARE_ORDER_INSIDE, head);
-        }
-        if (hardware_read_order(i, HARDWARE_ORDER_UP)) {
-            add_node(i,HARDWARE_ORDER_UP, head);
-        }
-        if (hardware_read_order(i, HARDWARE_ORDER_DOWN)) {
-            add_node(i,HARDWARE_ORDER_DOWN, head);
-        }
+int is_empty(queue_node **head) {
+    if (*head = NULL) {
+        return 1;
     }
-}
+    return 0;
+} 
+
 
 int excecute_order_from_idle(queue_node order) {
     int current_floor = 0;

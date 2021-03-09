@@ -8,48 +8,46 @@
 
 int main(){
    
- int error = hardware_init();
+    int error = hardware_init();
     if(error != 0){
         fprintf(stderr, "Unable to initialize hardware\n");
         exit(1);
     }
+
+    while (!check_legal_floor()) {
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+    }
+    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+
     ElevatorState elevator_state; 
     int timer_already_started = 0; 
     clock_t timer_start; 
     double timer_duration = 3; 
 
-    queue_node test_order;
-    test_order.floor = 3;
-    test_order.order_type = HARDWARE_ORDER_INSIDE;
-
-    hardware_command_door_open(1); //TESTING
-    hardware_command_order_light(0, HARDWARE_ORDER_INSIDE, 1);
-    hardware_command_order_light(1, HARDWARE_ORDER_INSIDE, 1);
-    hardware_command_order_light(2, HARDWARE_ORDER_INSIDE, 1);
-    hardware_command_order_light(3, HARDWARE_ORDER_INSIDE, 1);
-    hardware_command_order_light(1, HARDWARE_ORDER_UP, 1);
-    hardware_command_order_light(2, HARDWARE_ORDER_DOWN, 1);
+    queue_node *head = NULL;
 
 
-    printf("Opening the door");
-    elevator_state = STATE_DOOR_OPEN;
+    elevator_state = STATE_IDLE;
     while(1){
         if(hardware_read_stop_signal()){
             elevator_state = STATE_STOP_BUTTON_PRESSED;
             break;
         }
-
+        poll_order_buttons();
+        set_floor_indicator();
         
         switch (elevator_state)
         {
         case STATE_IDLE:
-            if (excecute_order_from_idle(test_order)){
-                elevator_state = STATE_MOVING;
-            }
+            
             break;
 
         case STATE_MOVING:
-
+            if (hardware_read_floor_sensor(head->floor)) { //dersom neste ordre er først i lista.
+                hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+                hardware_command_door_open(1);
+                elevator_state = STATE_DOOR_OPEN;
+            }
             break;
 
         case STATE_DOOR_OPEN:
@@ -64,6 +62,7 @@ int main(){
                 elevator_state = STATE_IDLE;
             }
             else{
+                hardware_command_door_open(1);
                 elevator_state = STATE_DOOR_OPEN;
             }
         
