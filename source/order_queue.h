@@ -9,6 +9,7 @@ typedef struct node {
 void push (queue_node ** head, int floor, HardwareOrder order_type);
 void pop(queue_node ** head);
 void remove_indexed(queue_node **head, int i);
+void complete_orders_floor(queue_node **head, int floor);
 
 
 queue_node add_node(int floor, HardwareOrder order_type, queue_node* next_order);

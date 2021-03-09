@@ -7,6 +7,14 @@
  * @brief Adds an order to the front of the list
  */
 void push (queue_node ** head, int floor, HardwareOrder order_type){
+    if ((*head) == NULL){
+        (*head) = malloc(sizeof(queue_node));
+        (*head)->floor = floor;
+        (*head)->order_type = order_type;
+        (*head)->next = NULL;
+        return;
+    }
+    
     queue_node * new_queue_node;
     new_queue_node = (queue_node*) malloc(sizeof(queue_node));
     
@@ -15,13 +23,12 @@ void push (queue_node ** head, int floor, HardwareOrder order_type){
     
     new_queue_node->next = *head; 
     (*head) = new_queue_node;
-    
 }
 /**
  * @brief Removes the first order.
  */
 void pop(queue_node ** head){
-    if ((*head) = NULL){
+    if ((*head) == NULL){
         return;
     }
     queue_node* next_node = (*head)->next;
@@ -49,6 +56,31 @@ void remove_indexed(queue_node **head, int n){
     current->next = temp->next;
     free(temp);
 }
+/**
+ * @brief removes all orderes to or from selected floor
+ */
+void complete_orders_floor(queue_node **head, int floor){
+    while ((*head)->floor == floor){
+        pop(head);
+    }
+
+    queue_node * prev = (*head);
+    queue_node * current = (*head)->next;
+    
+    while (current != NULL){
+        if (current->floor == floor){
+            
+            prev->next = current->next;
+            free(current);  
+            current = prev->next;
+        }
+        else{
+            prev = prev->next;
+            current = current->next;
+        }
+    }
+}
+
 
 
 queue_node add_node(int floor, HardwareOrder order_type, queue_node* head) {
