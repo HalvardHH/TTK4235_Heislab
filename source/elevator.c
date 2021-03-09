@@ -46,7 +46,6 @@ int stop_button_handler(){
     
 }
 
-
 void clear_all_order_lights(){
     HardwareOrder order_types[3] = {
         HARDWARE_ORDER_UP,
@@ -62,3 +61,38 @@ void clear_all_order_lights(){
     }
 }
 
+int check_legal_floor() {
+    for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
+        if (hardware_read_floor_sensor(i)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void poll_order_buttons() { //only turns on light
+    for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
+        if (hardware_read_order(i, HARDWARE_ORDER_INSIDE)) {
+            hardware_command_order_light(i, HARDWARE_ORDER_INSIDE, 1);
+            //needs to add orders to list
+        }
+    }
+    for (int i = 0; i < HARDWARE_NUMBER_OF_BUTTONS; i++) {
+        if (hardware_read_order(i, HARDWARE_ORDER_UP)) {
+            hardware_command_order_light(i, HARDWARE_ORDER_UP, 1);
+            //needs to add orders to list
+        }
+        if (hardware_read_order(i+1, HARDWARE_ORDER_DOWN)) {
+            hardware_command_order_light(i+1, HARDWARE_ORDER_DOWN, 1);
+            //needs to add orders to list
+        }
+    }
+}
+
+void set_floor_indicator() {
+    for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
+        if (hardware_read_floor_sensor(i)) {
+            hardware_command_floor_indicator_on(i);
+        }
+    }
+}
