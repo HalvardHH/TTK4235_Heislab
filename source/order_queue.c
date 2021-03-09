@@ -1,6 +1,55 @@
 #include "hardware.h"
 #include "order_queue.h"
-#include "stdio.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+/**
+ * @brief Adds an order to the front of the list
+ */
+void push (queue_node ** head, int floor, HardwareOrder order_type){
+    queue_node * new_queue_node;
+    new_queue_node = (queue_node*) malloc(sizeof(queue_node));
+    
+    new_queue_node->floor = floor;
+    new_queue_node->order_type = order_type;
+    
+    new_queue_node->next = *head; 
+    (*head) = new_queue_node;
+    
+}
+/**
+ * @brief Removes the first order.
+ */
+void pop(queue_node ** head){
+    if ((*head) = NULL){
+        return;
+    }
+    queue_node* next_node = (*head)->next;
+    free(*head);
+    *head = next_node; 
+}
+/**
+ * @brief Removes a spesific order with index i. Head is 0. 
+ */
+void remove_indexed(queue_node **head, int n){
+    queue_node* current = *head; 
+
+    if (n == 0){
+        pop(*head);
+        return;
+    }
+    for (int i = 0; i < n-1; i++){
+        if (current->next == NULL){
+            printf("out of bonds");
+            return;
+        }
+        current = current->next;
+    }
+    queue_node* temp = current->next;
+    current->next = temp->next;
+    free(temp);
+}
+
 
 queue_node add_node(int floor, HardwareOrder order_type, queue_node* head) {
     queue_node order;
