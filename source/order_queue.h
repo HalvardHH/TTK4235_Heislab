@@ -13,8 +13,10 @@ typedef struct node {
  * @brief Adds an order to the front of the list
  */
 void push (queue_node ** head, int floor, HardwareOrder order_type);
-void pop(queue_node ** head);
-void remove_indexed(queue_node **head, int i);
+
+/**
+ * @brief removes all orderes to or from selected floor
+ */
 void complete_orders_floor(queue_node **head, int floor);
 
 /**
@@ -26,6 +28,11 @@ void pop(queue_node ** head);
  * @brief Removes a spesific order with index i. Head is 0. 
  */
 void remove_indexed(queue_node **head, int i);
+
+/**
+ * @brief Checks for duplicate orders already in the queue. Return 1 if a duplicate is in the queue. 
+ */
+int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_type);
 
 /**
  * @brief Checks if the queue is empty.

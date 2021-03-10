@@ -50,9 +50,7 @@ void remove_indexed(queue_node **head, int n){
     current->next = temp->next;
     free(temp);
 }
-/**
- * @brief removes all orderes to or from selected floor
- */
+
 void complete_orders_floor(queue_node **head, int floor){
     while ((*head)->floor == floor){
         pop(head);
@@ -74,6 +72,17 @@ void complete_orders_floor(queue_node **head, int floor){
         }
     }
 }
+
+int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_type){
+    queue_node* current = head; 
+    while (current != NULL){
+        if ((current->floor == floor) && (current->order_type == order_type)){
+            return 1; 
+        }
+        current = current->next;
+    }
+}
+
 
 
 int is_empty(queue_node **head) {
