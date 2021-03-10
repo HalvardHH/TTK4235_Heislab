@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <timer.c>
 #include "hardware.h"
-#include "order_queue.h"
 
 int door_timer(clock_t* timer_start, int timer_duration, int* timer_already_started){
     if (!*timer_already_started){
@@ -22,10 +21,13 @@ int door_timer(clock_t* timer_start, int timer_duration, int* timer_already_star
     return 0;
 }
 
-int stop_button_handler(){
+int stop_button_handler(queue_node ** head){
     int between_floors = 1;
     hardware_command_stop_light(1);
-    //slette ubetjente bestillinger
+    while ((*head) != NULL){
+        pop(head);
+    }
+    
     clear_all_order_lights();
     for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++){
         if (hardware_read_floor_sensor(i)){

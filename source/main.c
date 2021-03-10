@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "hardware.h"
 #include "elevator.h"
-#include "order_queue.h"
 
 
 
@@ -29,28 +28,21 @@ int main(){
     int timer_already_started = 0; 
     clock_t timer_start; 
     double timer_duration = 3; 
+    HardwareMovement movement;
 
     int current_floor = return_legal_floor();
-    queue_node *head = NULL;
-    
-    push(&head, 2, HARDWARE_ORDER_INSIDE);
-    push(&head, 3, HARDWARE_ORDER_INSIDE);
-    push_back(&head, 0, HARDWARE_ORDER_INSIDE);
+    hardware_command_floor_indicator_on(current_floor);
 
-    clear_all_order_lights();
-    hardware_command_order_light(2, HARDWARE_ORDER_INSIDE, 1);
-    hardware_command_order_light(0, HARDWARE_ORDER_UP, 1);
-    push(&head, 1, HARDWARE_ORDER_INSIDE);
+    queue_node *head = NULL;  
 
     elevator_state = STATE_IDLE;
     while(1){
         if(hardware_read_stop_signal()){
+            hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+            movement = HARDWARE_MOVEMENT_STOP;
             elevator_state = STATE_STOP_BUTTON_PRESSED;
-            break;
         }
-        poll_order_buttons(&head);
-        set_floor_indicator();
-        
+        poll_order_buttons(&head);        
         switch (elevator_state)
         {
         case STATE_IDLE:
@@ -64,9 +56,11 @@ int main(){
                 }
                 else if (current_floor < head->floor){
                     hardware_command_movement(HARDWARE_MOVEMENT_UP);
+                    movement = HARDWARE_MOVEMENT_UP;
                 }
                 else{
                     hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+                    movement = HARDWARE_MOVEMENT_DOWN;
                 }
                 elevator_state = STATE_MOVING;
             }
@@ -79,6 +73,8 @@ int main(){
             }
                 if (complete_orders_floor(&head, current_floor)){ //turns off lights
                     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+                    movement = HARDWARE_MOVEMENT_STOP;
+
                     hardware_command_door_open(1);
                     elevator_state = STATE_DOOR_OPEN;
             }
@@ -92,7 +88,7 @@ int main(){
             break;
 
         case STATE_STOP_BUTTON_PRESSED:
-            if (stop_button_handler()){
+            if (stop_button_handler(&head)){
                 elevator_state = STATE_IDLE;
             }
             else{

@@ -133,7 +133,7 @@ void add_order_ordered(queue_node ** head, int floor, HardwareOrder order_type){
 
 
 int is_empty(queue_node **head) {
-    if (*head = NULL) {
+    if ((*head) == NULL) {
         return 1;
     }
     return 0;

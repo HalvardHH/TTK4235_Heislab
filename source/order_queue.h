@@ -31,10 +31,6 @@ int complete_orders_floor(queue_node **head, int floor);
  */
 void pop(queue_node ** head);
 
-/**
- * @brief Removes a spesific order with index i. Head is 0. 
- */
-void remove_indexed(queue_node **head, int i);
 
 /**
  * @brief Checks for duplicate orders already in the queue. 
@@ -53,7 +49,3 @@ void add_order_ordered(queue_node ** head, int floor, HardwareOrder order_type);
  */
 int is_empty(queue_node **head);
 
-/**
- * @brief Unfinished
- */
-int excecute_order_from_idle(queue_node order);

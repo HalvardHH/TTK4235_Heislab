@@ -1,5 +1,6 @@
 
 #include <time.h>
+#include "order_queue.h"
 
 /**
  * @brief States for the state machine that controls the elevator.
@@ -25,7 +26,7 @@ int door_timer(clock_t* timer_start, int timer_duration, int* timer_already_star
 /**
  * @brief Turns on the stoplight, deletes orders and opens the door if the elevator is at a legal floor.
  */
-int stop_button_handler();
+int stop_button_handler(queue_node ** head);
 
 /**
  * @brief Checks if the elevator is at a legal floor.
