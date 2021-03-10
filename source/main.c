@@ -24,6 +24,7 @@ int main(){
     clock_t timer_start; 
     double timer_duration = 3; 
 
+    int current_floor = return_legal_floor();
     queue_node *head = NULL;
 
 
@@ -39,11 +40,26 @@ int main(){
         switch (elevator_state)
         {
         case STATE_IDLE:
-            
+            if (head != NULL){
+                if (current_floor == -1){
+                    printf("Between floor in state idle, ERROR! SHUTTING DOWN");
+                    return 0;
+                }
+                if (current_floor == head->floor){
+                    /* Do nothing */
+                }
+                else if (current_floor < head->floor){
+                    hardware_command_movement(HARDWARE_MOVEMENT_UP);
+                }
+                else{
+                    hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+                }
+                elevator_state = STATE_MOVING;
+            }
             break;
 
         case STATE_MOVING:
-            int current_floor = return_legal_floor();
+            current_floor = return_legal_floor();
             if (current_floor != -1){
                 hardware_command_floor_indicator_on(current_floor);
             }
