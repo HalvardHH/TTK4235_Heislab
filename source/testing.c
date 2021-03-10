@@ -57,12 +57,11 @@ void order_queue_test(){
     complete_orders_floor(&head, 2);
     print_order_queue(head);
     if (check_duplicate_orders(&head, 3, HARDWARE_ORDER_INSIDE)){
-        print("DUPLICATE!");
+        printf("DUPLICATE!");
     }
     if (!check_duplicate_orders(&head, 2, HARDWARE_ORDER_INSIDE)){
-        print("NOT DUPLICATE!");
+        printf("NOT DUPLICATE!");
     }
-
 
     printf("DONE!");
 }

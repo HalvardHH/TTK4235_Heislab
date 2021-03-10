@@ -43,10 +43,15 @@ int main(){
             break;
 
         case STATE_MOVING:
-            if (hardware_read_floor_sensor(head->floor)) { //dersom neste ordre er først i lista.
-                hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-                hardware_command_door_open(1);
-                elevator_state = STATE_DOOR_OPEN;
+            int current_floor = return_legal_floor();
+            if (current_floor != -1){
+                //Etasjelys på og slukk forrige 
+            }
+                if (complete_orders_floor(&head, current_floor)){ 
+                    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+                    hardware_command_door_open(1);
+                    //slå av bestillingslys
+                    elevator_state = STATE_DOOR_OPEN;
             }
             break;
 

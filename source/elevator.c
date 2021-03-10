@@ -61,13 +61,13 @@ void clear_all_order_lights(){
     }
 }
 
-int check_legal_floor() {
+int return_legal_floor() {
     for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
         if (hardware_read_floor_sensor(i)) {
-            return 1;
+            return i;
         }
     }
-    return 0;
+    return -1;
 }
 
 void poll_order_buttons() { //only turns on light

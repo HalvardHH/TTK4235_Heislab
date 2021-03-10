@@ -15,9 +15,9 @@ typedef struct node {
 void push (queue_node ** head, int floor, HardwareOrder order_type);
 
 /**
- * @brief removes all orderes to or from selected floor
+ * @brief removes all orderes to or from selected floor. Returns 1 if 1 or more order(s) got completed. 
  */
-void complete_orders_floor(queue_node **head, int floor);
+int complete_orders_floor(queue_node **head, int floor);
 
 /**
  * @brief Removes the first order.

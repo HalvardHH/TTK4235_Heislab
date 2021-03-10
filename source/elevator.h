@@ -29,9 +29,9 @@ int stop_button_handler();
 
 /**
  * @brief Checks if the elevator is at a legal floor.
- * @return 1 if the elevator is at a legal floor, 0 otherwise. 
+ * @return the floor number if the elevator is at a legal floor, -1 otherwise. 
  */
-int check_legal_floor();
+int return_legal_floor();
 
 /**
  * @brief Checks if any of the order buttons have been pressed. Turns on the corresponding lights and adds orders to queue.
