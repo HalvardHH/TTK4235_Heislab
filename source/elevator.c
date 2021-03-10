@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <timer.c>
 #include "hardware.h"
+#include "order_queue.h"
 
 int door_timer(clock_t* timer_start, int timer_duration, int* timer_already_started){
     if (!*timer_already_started){
@@ -70,21 +71,28 @@ int return_legal_floor() {
     return -1;
 }
 
-void poll_order_buttons() { //only turns on light
+void poll_order_buttons(queue_node ** head) { //only turns on light
     for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
-        if (hardware_read_order(i, HARDWARE_ORDER_INSIDE)) {
+        if ( (hardware_read_order(i, HARDWARE_ORDER_INSIDE)) && 
+        (!check_duplicate_orders(&head, i, HARDWARE_ORDER_INSIDE ))){
+
             hardware_command_order_light(i, HARDWARE_ORDER_INSIDE, 1);
-            //needs to add orders to list
+            push_back(head, i, HARDWARE_ORDER_INSIDE);
         }
     }
     for (int i = 0; i < HARDWARE_NUMBER_OF_BUTTONS; i++) {
-        if (hardware_read_order(i, HARDWARE_ORDER_UP)) {
+        if (hardware_read_order(i, HARDWARE_ORDER_UP) && 
+        (!check_duplicate_orders(&head, i, HARDWARE_ORDER_UP ))) {
+            
             hardware_command_order_light(i, HARDWARE_ORDER_UP, 1);
-            //needs to add orders to list
+            push_back(head, i, HARDWARE_ORDER_UP);
         }
-        if (hardware_read_order(i+1, HARDWARE_ORDER_DOWN)) {
+        if (hardware_read_order(i+1, HARDWARE_ORDER_DOWN) && 
+        (!check_duplicate_orders(&head, i, HARDWARE_ORDER_DOWN ))) {
+            
             hardware_command_order_light(i+1, HARDWARE_ORDER_DOWN, 1);
-            //needs to add orders to list
+            push_back(head, i, HARDWARE_ORDER_DOWN);
+
         }
     }
 }

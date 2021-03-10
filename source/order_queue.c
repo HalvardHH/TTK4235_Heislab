@@ -22,7 +22,23 @@ void push (queue_node ** head, int floor, HardwareOrder order_type){
     new_queue_node->next = *head; 
     (*head) = new_queue_node;
 }
-
+void push_back(queue_node ** head, int floor, HardwareOrder order_type){
+    if ((*head) == NULL){
+        (*head) = malloc(sizeof(queue_node));
+        (*head)->floor = floor;
+        (*head)->order_type = order_type;
+        (*head)->next = NULL;
+        return;
+    }
+    queue_node * current = (*head);
+    while (current->next != NULL){
+        current = current->next; 
+    }
+    (current->next) = (queue_node *) malloc(sizeof(queue_node));
+    (current->next)->floor = floor;
+    (current->next)->order_type = order_type;
+    (current->next)->next = NULL;
+}
 void pop(queue_node ** head){
     if ((*head) == NULL){
         return;
@@ -91,6 +107,19 @@ int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_ty
         current = current->next;
     }
     return 0; 
+}
+void add_order_ordered(queue_node ** head, int floor, HardwareOrder order_type){ //might be redundant
+    
+    if ((*head) == NULL){
+        push(head, floor, order_type);
+        return; 
+    }
+    queue_node * current = *head; 
+    if (order_type == HARDWARE_ORDER_INSIDE){
+        while(current->order_type == HARDWARE_ORDER_INSIDE){
+
+        }
+    }
 }
 
 

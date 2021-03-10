@@ -14,6 +14,12 @@ typedef struct node {
  */
 void push (queue_node ** head, int floor, HardwareOrder order_type);
 
+
+/**
+ * @brief Adds an order to the end of the list
+ */
+void push_back(queue_node ** head, int floor, HardwareOrder order_type);
+
 /**
  * @brief removes all orderes to or from selected floor and turns off light
  * @return 1 if 1 or more order(s) got completed.
@@ -31,9 +37,15 @@ void pop(queue_node ** head);
 void remove_indexed(queue_node **head, int i);
 
 /**
- * @brief Checks for duplicate orders already in the queue. Return 1 if a duplicate is in the queue. 
+ * @brief Checks for duplicate orders already in the queue. 
+ * @return 1 if a duplicate is in the queue, 0 otherwise. 
  */
 int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_type);
+
+/**
+ * @brief Adds an order to the queue at the right place. Assumes the order is not a duplicate. 
+ */
+void add_order_ordered(queue_node ** head, int floor, HardwareOrder order_type);
 
 /**
  * @brief Checks if the queue is empty.
