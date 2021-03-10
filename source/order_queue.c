@@ -74,7 +74,7 @@ void complete_orders_floor(queue_node **head, int floor){
 }
 
 int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_type){
-    queue_node* current = head; 
+    queue_node* current = *head; 
     while (current != NULL){
         if ((current->floor == floor) && (current->order_type == order_type)){
             return 1; 
