@@ -14,8 +14,14 @@ int main(){
         exit(1);
     }
 
-    while (!check_legal_floor()) {
-        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+    while (return_legal_floor() == -1) {
+        if (return_legal_floor() > 3) {
+            hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        }
+        if (return_legal_floor() < 0) {
+            hardware_command_movement(HARDWARE_MOVEMENT_UP);
+        }
+        // hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
     }
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
@@ -26,7 +32,15 @@ int main(){
 
     int current_floor = return_legal_floor();
     queue_node *head = NULL;
+    
+    push(&head, 2, HARDWARE_ORDER_INSIDE);
+    push(&head, 3, HARDWARE_ORDER_INSIDE);
+    push_back(&head, 0, HARDWARE_ORDER_INSIDE);
 
+    clear_all_order_lights();
+    hardware_command_order_light(2, HARDWARE_ORDER_INSIDE, 1);
+    hardware_command_order_light(0, HARDWARE_ORDER_UP, 1);
+    push(&head, 1, HARDWARE_ORDER_INSIDE);
 
     elevator_state = STATE_IDLE;
     while(1){
@@ -34,7 +48,7 @@ int main(){
             elevator_state = STATE_STOP_BUTTON_PRESSED;
             break;
         }
-        poll_order_buttons();
+        poll_order_buttons(&head);
         set_floor_indicator();
         
         switch (elevator_state)

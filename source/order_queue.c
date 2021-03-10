@@ -48,24 +48,24 @@ void pop(queue_node ** head){
     *head = next_node; 
 }
 
-void remove_indexed(queue_node **head, int n){
-    queue_node* current = *head; 
+// void remove_indexed(queue_node **head, int n){
+//     queue_node* current = *head; 
 
-    if (n == 0){
-        pop(*head);
-        return;
-    }
-    for (int i = 0; i < n-1; i++){
-        if (current->next == NULL){
-            printf("out of bonds");
-            return;
-        }
-        current = current->next;
-    }
-    queue_node* temp = current->next;
-    current->next = temp->next;
-    free(temp);
-}
+//     if (n == 0){
+//         pop(*head);
+//         return;
+//     }
+//     for (int i = 0; i < n-1; i++){
+//         if (current->next == NULL){
+//             printf("out of bonds");
+//             return;
+//         }
+//         current = current->next;
+//     }
+//     queue_node* temp = current->next;
+//     current->next = temp->next;
+//     free(temp);
+// }
 
 int complete_orders_floor(queue_node **head, int floor){
     int retval = 0; 
@@ -73,21 +73,26 @@ int complete_orders_floor(queue_node **head, int floor){
         return retval; 
     }
     while ((*head)->floor == floor){
-        pop(head);
         hardware_command_order_light(floor, (*head)->order_type,0);
-        retval = 1; 
+        pop(head);
+        retval = 1;
+        if ((*head) == NULL){
+            return retval;
+        } 
     }
-
+    if ((*head) == NULL){
+        return retval; 
+    }
+    
     queue_node * prev = (*head);
     queue_node * current = (*head)->next;
     
     while (current != NULL){
         if (current->floor == floor){
-            
+            hardware_command_order_light(floor, current->order_type,0);
             prev->next = current->next;
             free(current);  
             current = prev->next;
-            hardware_command_order_light(floor, current->order_type,0);
             retval = 1; 
         }
         else{
@@ -99,7 +104,10 @@ int complete_orders_floor(queue_node **head, int floor){
 }
 
 int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_type){
-    queue_node* current = *head; 
+    if (head == NULL){
+        return 0;
+    }
+    queue_node * current = (*head); 
     while (current != NULL){
         if ((current->floor == floor) && (current->order_type == order_type)){
             return 1; 
@@ -131,29 +139,4 @@ int is_empty(queue_node **head) {
     return 0;
 } 
 
-
-int excecute_order_from_idle(queue_node order) {
-    int current_floor = 0;
-    for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
-        if (hardware_read_floor_sensor(i)){
-            current_floor = i;
-            break;
-        }
-    }
-    if (current_floor == order.floor){
-        return 0;
-    }
-
-    if (order.order_type == HARDWARE_ORDER_INSIDE){
-        if (order.floor > current_floor){
-            hardware_command_movement(HARDWARE_MOVEMENT_UP);
-            return 1;
-        }
-
-        else{
-            hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-            return 1;
-        }     
-    } 
-} 
 

@@ -74,7 +74,7 @@ int return_legal_floor() {
 void poll_order_buttons(queue_node ** head) { //only turns on light
     for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
         if ( (hardware_read_order(i, HARDWARE_ORDER_INSIDE)) && 
-        (!check_duplicate_orders(&head, i, HARDWARE_ORDER_INSIDE ))){
+        (!check_duplicate_orders(head, i, HARDWARE_ORDER_INSIDE ))){
 
             hardware_command_order_light(i, HARDWARE_ORDER_INSIDE, 1);
             push_back(head, i, HARDWARE_ORDER_INSIDE);
@@ -82,16 +82,16 @@ void poll_order_buttons(queue_node ** head) { //only turns on light
     }
     for (int i = 0; i < HARDWARE_NUMBER_OF_BUTTONS; i++) {
         if (hardware_read_order(i, HARDWARE_ORDER_UP) && 
-        (!check_duplicate_orders(&head, i, HARDWARE_ORDER_UP ))) {
+        (!check_duplicate_orders(head, i, HARDWARE_ORDER_UP ))) {
             
             hardware_command_order_light(i, HARDWARE_ORDER_UP, 1);
             push_back(head, i, HARDWARE_ORDER_UP);
         }
         if (hardware_read_order(i+1, HARDWARE_ORDER_DOWN) && 
-        (!check_duplicate_orders(&head, i, HARDWARE_ORDER_DOWN ))) {
+        (!check_duplicate_orders(head, i+1, HARDWARE_ORDER_DOWN ))) {
             
             hardware_command_order_light(i+1, HARDWARE_ORDER_DOWN, 1);
-            push_back(head, i, HARDWARE_ORDER_DOWN);
+            push_back(head, i+1, HARDWARE_ORDER_DOWN);
 
         }
     }
