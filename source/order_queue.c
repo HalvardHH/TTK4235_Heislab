@@ -55,6 +55,7 @@ int complete_orders_floor(queue_node **head, int floor){
     int retval = 0; 
     while ((*head)->floor == floor){
         pop(head);
+        hardware_command_order_light(floor, (*head)->order_type,0);
         retval = 1; 
     }
 
@@ -67,6 +68,7 @@ int complete_orders_floor(queue_node **head, int floor){
             prev->next = current->next;
             free(current);  
             current = prev->next;
+            hardware_command_order_light(floor, current->order_type,0);
             retval = 1; 
         }
         else{

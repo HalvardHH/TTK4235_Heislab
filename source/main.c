@@ -45,12 +45,11 @@ int main(){
         case STATE_MOVING:
             int current_floor = return_legal_floor();
             if (current_floor != -1){
-                //Etasjelys på og slukk forrige 
+                hardware_command_floor_indicator_on(current_floor);
             }
-                if (complete_orders_floor(&head, current_floor)){ 
+                if (complete_orders_floor(&head, current_floor)){ //turns off lights
                     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
                     hardware_command_door_open(1);
-                    //slå av bestillingslys
                     elevator_state = STATE_DOOR_OPEN;
             }
             break;
