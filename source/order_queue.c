@@ -53,6 +53,9 @@ void remove_indexed(queue_node **head, int n){
 
 int complete_orders_floor(queue_node **head, int floor){
     int retval = 0; 
+    if ((*head) == NULL){
+        return retval; 
+    }
     while ((*head)->floor == floor){
         pop(head);
         hardware_command_order_light(floor, (*head)->order_type,0);
@@ -87,6 +90,7 @@ int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_ty
         }
         current = current->next;
     }
+    return 0; 
 }
 
 
