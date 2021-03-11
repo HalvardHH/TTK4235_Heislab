@@ -107,3 +107,26 @@ void set_floor_indicator() {
     }
 }
 
+void idle_between_floors(queue_node ** head, HardwareMovement* previous_direction, int previous_legal_floor){
+    if (previous_legal_floor == (*head)->floor){
+        if (*previous_direction == HARDWARE_MOVEMENT_DOWN){
+            hardware_command_movement(HARDWARE_MOVEMENT_UP);
+            *previous_direction = HARDWARE_MOVEMENT_UP;
+        }
+    
+         else{
+            hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+            *previous_direction = HARDWARE_MOVEMENT_DOWN;
+        }
+    }
+                
+    else if (previous_legal_floor < (*head)->floor){
+        hardware_command_movement(HARDWARE_MOVEMENT_UP);
+        *previous_direction = HARDWARE_MOVEMENT_UP;
+    }
+                    
+    else{
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        *previous_direction = HARDWARE_MOVEMENT_DOWN;
+    }    
+}

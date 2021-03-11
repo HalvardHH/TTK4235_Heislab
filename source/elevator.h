@@ -43,3 +43,8 @@ void poll_order_buttons();
  * @brief Turns on the light corresponding to the current floor.
  */
 void set_floor_indicator();
+
+/**
+ * @brief Sets movement when idle between floors. 
+ */
+void idle_between_floors(queue_node ** head, HardwareMovement* previous_direction, int previous_legal_floor);

@@ -21,10 +21,15 @@ void push (queue_node ** head, int floor, HardwareOrder order_type);
 void push_back(queue_node ** head, int floor, HardwareOrder order_type);
 
 /**
- * @brief removes all orderes to or from selected floor and turns off light
- * @return 1 if 1 or more order(s) got completed.
+ * @brief checks if the elevator should complete order at a floor
+ * @return 1 if true , 0 otherwise
  */
-int complete_orders_floor(queue_node **head, int floor);
+int complete_orders_floor(queue_node **head, int floor, HardwareMovement previous_direction);
+/**
+ * @brief removes all orderes to or from selected floor and turns off light
+ */
+void remove_completed_orders(queue_node ** head, int floor);
+
 
 /**
  * @brief Removes the first order.
@@ -49,3 +54,8 @@ void add_order_ordered(queue_node ** head, int floor, HardwareOrder order_type);
  */
 int is_empty(queue_node **head);
 
+/**
+ * @brief Checks if an order should be ignored
+ * @return 1 if ignore, 0 otherwise. 
+ */
+int check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction);

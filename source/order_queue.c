@@ -67,40 +67,52 @@ void pop(queue_node ** head){
 //     free(temp);
 // }
 
-int complete_orders_floor(queue_node **head, int floor){
+int complete_orders_floor(queue_node **head, int floor, HardwareMovement previous_direction){
     int retval = 0; 
     if ((*head) == NULL){
         return retval; 
     }
+    queue_node * current = (*head);
+    
+    while (current != NULL){
+        if (current->floor == floor){
+            if (!check_if_ignore(head, floor, previous_direction)){
+                retval = 1;
+            }
+        }
+    current = current->next;
+    }
+    return retval; 
+}
+
+void remove_completed_orders(queue_node ** head, int floor){
     while ((*head)->floor == floor){
         hardware_command_order_light(floor, (*head)->order_type,0);
         pop(head);
-        retval = 1;
+        
         if ((*head) == NULL){
-            return retval;
-        } 
+            return;
+        }
     }
     if ((*head) == NULL){
-        return retval; 
+        return;
     }
-    
+
     queue_node * prev = (*head);
     queue_node * current = (*head)->next;
-    
+
     while (current != NULL){
         if (current->floor == floor){
             hardware_command_order_light(floor, current->order_type,0);
             prev->next = current->next;
             free(current);  
             current = prev->next;
-            retval = 1; 
         }
         else{
             prev = prev->next;
             current = current->next;
         }
     }
-    return retval; 
 }
 
 int check_duplicate_orders(queue_node ** head, int floor, HardwareOrder order_type){
@@ -138,5 +150,31 @@ int is_empty(queue_node **head) {
     }
     return 0;
 } 
+int check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction){
+    if ((*head)->next == NULL){
+        return 0; 
+    }
+    if ((*head)->order_type == HARDWARE_ORDER_INSIDE){
+        return 0; 
+    }
 
-
+    if ((*head)->floor == current_floor){
+        if (previous_direction == HARDWARE_MOVEMENT_UP){
+            if ((*head)->order_type == HARDWARE_ORDER_DOWN){
+                return 1;
+            }
+            if ((*head)->floor < current_floor){
+                return 1;
+            }
+        }
+        else if (previous_direction == HARDWARE_MOVEMENT_DOWN){
+            if ((*head)->order_type == HARDWARE_ORDER_UP){
+                return 1; 
+            }
+            if ((*head)->floor > current_floor){
+                return 1; 
+            }
+        }
+    }
+    return 0; 
+}
