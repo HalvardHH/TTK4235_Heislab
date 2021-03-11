@@ -13,22 +13,12 @@ int main(){
         exit(1);
     }
 
-    while (return_legal_floor() == -1) {
-        if (return_legal_floor() > 3) {
-            hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-        }
-        if (return_legal_floor() < 0) {
-            hardware_command_movement(HARDWARE_MOVEMENT_UP);
-        }
-        // hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-    }
-    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-
     ElevatorState elevator_state; 
     int timer_already_started = 0; 
     clock_t timer_start; 
     double timer_duration = 3; 
-    HardwareMovement movement;
+    HardwareMovement previous_direction;
+    int previous_legal_floor;
 
     int current_floor = return_legal_floor();
     hardware_command_floor_indicator_on(current_floor);
@@ -36,10 +26,29 @@ int main(){
     queue_node *head = NULL;  
 
     elevator_state = STATE_IDLE;
+
+    while (return_legal_floor() == -1) {
+        if(hardware_read_stop_signal()){
+            hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+            elevator_state = STATE_STOP_BUTTON_PRESSED;  //SPØR STUDASS
+            break;
+        }
+        else if (return_legal_floor() > 3) {
+            hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        }
+        else if (return_legal_floor() < 0) {
+            hardware_command_movement(HARDWARE_MOVEMENT_UP);
+        }
+        // hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+    }
+    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+    
+    previous_legal_floor = return_legal_floor();
+
+    
     while(1){
         if(hardware_read_stop_signal()){
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-            movement = HARDWARE_MOVEMENT_STOP;
             elevator_state = STATE_STOP_BUTTON_PRESSED;
         }
         poll_order_buttons(&head);        
@@ -48,19 +57,37 @@ int main(){
         case STATE_IDLE:
             if (head != NULL){
                 if (current_floor == -1){
-                    printf("Between floor in state idle, ERROR! SHUTTING DOWN");
-                    return 0;
+                    if (previous_legal_floor == head->floor){
+                        if (previous_direction == HARDWARE_MOVEMENT_DOWN){
+                            hardware_command_movement(HARDWARE_MOVEMENT_UP);
+                            previous_direction = HARDWARE_MOVEMENT_UP;
+                        }
+                        else{
+                            hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+                            previous_direction = HARDWARE_MOVEMENT_DOWN;
+                        }
+                    }
+                
+                    else if (previous_legal_floor < head->floor){
+                        hardware_command_movement(HARDWARE_MOVEMENT_UP);
+                        previous_direction = HARDWARE_MOVEMENT_UP;
+                    }
+                    
+                    else{
+                        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+                        previous_direction = HARDWARE_MOVEMENT_DOWN;
+                    }
                 }
-                if (current_floor == head->floor){
+                else if (current_floor == head->floor){
                     /* Do nothing */
                 }
                 else if (current_floor < head->floor){
                     hardware_command_movement(HARDWARE_MOVEMENT_UP);
-                    movement = HARDWARE_MOVEMENT_UP;
+                    previous_direction = HARDWARE_MOVEMENT_UP;
                 }
                 else{
                     hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-                    movement = HARDWARE_MOVEMENT_DOWN;
+                    previous_direction = HARDWARE_MOVEMENT_DOWN;
                 }
                 elevator_state = STATE_MOVING;
             }
@@ -70,10 +97,10 @@ int main(){
             current_floor = return_legal_floor();
             if (current_floor != -1){
                 hardware_command_floor_indicator_on(current_floor);
+                previous_legal_floor = current_floor;
             }
                 if (complete_orders_floor(&head, current_floor)){ //turns off lights
                     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-                    movement = HARDWARE_MOVEMENT_STOP;
 
                     hardware_command_door_open(1);
                     elevator_state = STATE_DOOR_OPEN;
