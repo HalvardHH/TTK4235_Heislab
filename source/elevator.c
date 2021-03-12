@@ -107,9 +107,9 @@ void set_floor_indicator() {
     }
 }
 
-void idle_between_floors(queue_node ** head, HardwareMovement* previous_direction, int previous_legal_floor){
+void idle_between_floors(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement between_floor_direction, int previous_legal_floor){
     if (previous_legal_floor == (*head)->floor){
-        if (*previous_direction == HARDWARE_MOVEMENT_DOWN){
+        if (between_floor_direction == HARDWARE_MOVEMENT_DOWN){
             hardware_command_movement(HARDWARE_MOVEMENT_UP);
             *previous_direction = HARDWARE_MOVEMENT_UP;
         }

@@ -18,36 +18,33 @@ int main(){
     clock_t timer_start; 
     double timer_duration = 3; 
     HardwareMovement previous_direction = HARDWARE_MOVEMENT_STOP;
+    HardwareMovement between_floor_direction = HARDWARE_MOVEMENT_STOP;
+
     int previous_legal_floor;
 
     int current_floor = return_legal_floor();
-    hardware_command_floor_indicator_on(current_floor);
 
     queue_node *head = NULL;  
 
     elevator_state = STATE_IDLE;
-
+    clear_all_order_lights();
+    
     while (return_legal_floor() == -1) {
         if(hardware_read_stop_signal()){
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-            elevator_state = STATE_STOP_BUTTON_PRESSED;  //SPØR STUDASS
-            break;
+            elevator_state = STATE_STOP_BUTTON_PRESSED; 
+            fprintf(stderr, "Stop button pressed during initalization. Shutting down. \n");
+            exit(1);
         }
-        else if (return_legal_floor() > 3) {
-            hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-            previous_direction = HARDWARE_MOVEMENT_DOWN;
-        }
-        else if (return_legal_floor() < 0) {
-            hardware_command_movement(HARDWARE_MOVEMENT_UP);
-            previous_direction = HARDWARE_MOVEMENT_UP;
-
-        }
-        // hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        previous_direction = HARDWARE_MOVEMENT_DOWN;
+        between_floor_direction = HARDWARE_MOVEMENT_DOWN;
     }
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
     
     previous_legal_floor = return_legal_floor();
-
+    hardware_command_floor_indicator_on(previous_legal_floor);
+    
     
     while(1){
         if(hardware_read_stop_signal()){
@@ -60,7 +57,7 @@ int main(){
         case STATE_IDLE:
             if (head != NULL){
                 if (current_floor == -1){
-                   idle_between_floors(&head, &previous_direction, previous_legal_floor);
+                   idle_between_floors(&head, &previous_direction, between_floor_direction, previous_legal_floor);
                 }
                 else if (current_floor == head->floor){
                     /* Do nothing */
@@ -68,10 +65,14 @@ int main(){
                 else if (current_floor < head->floor){
                     hardware_command_movement(HARDWARE_MOVEMENT_UP);
                     previous_direction = HARDWARE_MOVEMENT_UP;
+                    between_floor_direction = HARDWARE_MOVEMENT_UP;
+
                 }
                 else{
                     hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
                     previous_direction = HARDWARE_MOVEMENT_DOWN;
+                    between_floor_direction = HARDWARE_MOVEMENT_DOWN;
+
                 }
                 elevator_state = STATE_MOVING;
             }

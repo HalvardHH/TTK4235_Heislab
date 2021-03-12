@@ -47,4 +47,4 @@ void set_floor_indicator();
 /**
  * @brief Sets movement when idle between floors. 
  */
-void idle_between_floors(queue_node ** head, HardwareMovement* previous_direction, int previous_legal_floor);
+void idle_between_floors(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement between_floor_direction, int previous_legal_floor);

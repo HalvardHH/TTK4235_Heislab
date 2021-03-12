@@ -68,24 +68,27 @@ void pop(queue_node ** head){
 // }
 
 int complete_orders_floor(queue_node **head, int floor, HardwareMovement previous_direction){
-    int retval = 0; 
     if ((*head) == NULL){
-        return retval; 
+        return 0;
     }
     queue_node * current = (*head);
+
+    if ((*head)->floor == floor){
+        if ((*head)->next == NULL){ 
+            return 1; 
+        }
+    }
     
     while (current != NULL){
         if (current->floor == floor){
-            if ((*head)->next == NULL){
-                retval = 1; 
-            }
-            else if (!check_if_ignore(head, floor, previous_direction)){
-                retval = 1;
+            if (!check_if_ignore(&current, floor, previous_direction)){
+                return 1;
             }
         }
     current = current->next;
     }
-    return retval; 
+    return 0; 
+
 }
 
 void remove_completed_orders(queue_node ** head, int floor){
@@ -162,20 +165,14 @@ int check_if_ignore(queue_node ** head, int current_floor, HardwareMovement prev
     if ((*head)->floor == current_floor){
 
         if (previous_direction == HARDWARE_MOVEMENT_UP){
-            if ((*head)->order_type == HARDWARE_ORDER_DOWN){
+            if ((*head)->order_type == HARDWARE_ORDER_DOWN && (*head)->floor != HARDWARE_NUMBER_OF_FLOORS-1){
                 return 1;
             }
-            // if ((*head)->floor < current_floor){
-            //     return 1;
-            // }
         }
-        else if (previous_direction == HARDWARE_MOVEMENT_DOWN){
+        else if (previous_direction == HARDWARE_MOVEMENT_DOWN && (*head)->floor != 0){
             if ((*head)->order_type == HARDWARE_ORDER_UP){
                 return 1; 
             }
-            // if ((*head)->floor > current_floor){
-            //     return 1; 
-            // }
         }
     }
     return 0; 
