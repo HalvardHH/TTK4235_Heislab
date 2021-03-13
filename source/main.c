@@ -12,39 +12,39 @@ int main(){
         fprintf(stderr, "Unable to initialize hardware\n");
         exit(1);
     }
-
     ElevatorState elevator_state; 
     int timer_already_started = 0; 
     clock_t timer_start; 
     double timer_duration = 3; 
     HardwareMovement previous_direction = HARDWARE_MOVEMENT_STOP;
     HardwareMovement between_floor_direction = HARDWARE_MOVEMENT_STOP;
-
     int previous_legal_floor;
-
     int current_floor = return_legal_floor();
-
     queue_node *head = NULL;  
 
+    
+
     elevator_state = STATE_IDLE;
-    clear_all_order_lights();
+    // clear_all_order_lights();
     
-    while (return_legal_floor() == -1) {
-        if(hardware_read_stop_signal()){
-            hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-            elevator_state = STATE_STOP_BUTTON_PRESSED; 
-            fprintf(stderr, "Stop button pressed during initalization. Shutting down. \n");
-            exit(1);
-        }
-        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-        previous_direction = HARDWARE_MOVEMENT_DOWN;
-        between_floor_direction = HARDWARE_MOVEMENT_DOWN;
-    }
-    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+    // while (return_legal_floor() == -1) {
+    //     if(hardware_read_stop_signal()){
+    //         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+    //         elevator_state = STATE_STOP_BUTTON_PRESSED; 
+    //         fprintf(stderr, "Stop button pressed during initalization. Shutting down. \n");
+    //         exit(1);
+    //     }
+    //     hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+    //     previous_direction = HARDWARE_MOVEMENT_DOWN; //tror disse kan fjernes 
+    //     between_floor_direction = HARDWARE_MOVEMENT_DOWN; //tror disse kan fjernes 
+    // }
+    // hardware_command_movement(HARDWARE_MOVEMENT_STOP);
     
-    previous_legal_floor = return_legal_floor();
-    hardware_command_floor_indicator_on(previous_legal_floor);
+    // previous_legal_floor = return_legal_floor();
+    // hardware_command_floor_indicator_on(previous_legal_floor);
     
+    elevator_software_init(&elevator_state, &previous_legal_floor);
+
     
     while(1){
         if(hardware_read_stop_signal()){
@@ -84,9 +84,9 @@ int main(){
                 hardware_command_floor_indicator_on(current_floor);
                 previous_legal_floor = current_floor;
             }
-                if (complete_orders_floor(&head, current_floor, previous_direction)){
+                if (queue_complete_orders_floor(&head, current_floor, previous_direction)){
                     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-                    remove_completed_orders(&head, current_floor);
+                    queue_remove_completed_orders(&head, current_floor);
 
                     hardware_command_door_open(1);
                     elevator_state = STATE_DOOR_OPEN;
@@ -111,7 +111,8 @@ int main(){
         
             break;
         default: 
-            printf("NO VALID CASE");
+            fprintf(stderr, "Out of state machine. Shutting down. \n");
+            exit(1);
 
         }
     }

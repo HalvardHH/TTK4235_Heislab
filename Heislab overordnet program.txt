@@ -50,3 +50,13 @@ Switch Case:
 	else 
 		state = Door_open;
 	
+
+	Ting som mangler: 
+
+	1) Flytte globale variabler fra main(). Kanksje til elevator.h? eller? 
+	2) bruke eksisterende funksjoner i stop_button_handler() for å sjekke om vi er between floor. 
+	3) rename funksjoner fra elevator.h. Kanksje ha prefix elevator, eller software? 
+	4) Lage funksjoner som tilsvarer stop_button_handler til de andre states. 
+	5)  Bruke queue_is_empty, eller fjerne den. 
+	6) ny timer? Rename timer.c til timer.h? eller lage både h og c, eller flytte hele timeren til elevator? 
+	
