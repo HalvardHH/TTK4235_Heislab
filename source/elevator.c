@@ -170,13 +170,13 @@ void idle_on_floor(queue_node ** head, HardwareMovement* previous_direction, Har
 
 int moving_handler(queue_node ** head, HardwareMovement previous_direction, int* current_floor, int* previous_legal_floor){
     *current_floor = return_legal_floor();
-    if (current_floor != -1){
-        hardware_command_floor_indicator_on(current_floor);
-        *previous_legal_floor = current_floor;
+    if (*current_floor != -1){
+        hardware_command_floor_indicator_on(*current_floor);
+        previous_legal_floor = current_floor;
     }
-    if (queue_complete_orders_floor(head, current_floor, previous_direction)){
+    if (queue_complete_orders_floor(head, *current_floor, previous_direction)){
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-        queue_remove_completed_orders(head, current_floor);
+        queue_remove_completed_orders(head, *current_floor);
         return 1;
      }
     return 0; 

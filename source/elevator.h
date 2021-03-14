@@ -7,15 +7,6 @@
 #define TIMER_DURATION 3
 
 
-
-/**
- * @brief Initializes the elevator states and starting position.
- * Must be called once before other calls to the elevator control software. 
- *
- * @return 0 on success. Non-zero for failure.
- */
-void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor);
-
 /**
  * @brief States for the state machine that controls the elevator.
  */
@@ -26,6 +17,14 @@ typedef enum {
     STATE_STOP_BUTTON_PRESSED,
     
 } ElevatorState;
+
+/**
+ * @brief Initializes the elevator states and starting position.
+ * Must be called once before other calls to the elevator control software. 
+ *
+ * @return 0 on success. Non-zero for failure.
+ */
+void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor);
 
 /**
  * @brief Turns off the all the order lights. 
