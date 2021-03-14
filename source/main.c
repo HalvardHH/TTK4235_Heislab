@@ -59,7 +59,7 @@ int main(){
                    idle_between_floors(&head, &previous_direction, between_floor_direction, previous_legal_floor);
                 }
                 else{
-                    idle_handler(&head, &previous_direction, &between_floor_direction, current_floor);
+                    idle_on_floor(&head, &previous_direction, &between_floor_direction, current_floor);
                 }
                 
                 // else if (current_floor == head->floor){
@@ -82,17 +82,21 @@ int main(){
             break;
 
         case STATE_MOVING:
-            current_floor = return_legal_floor();
-            if (current_floor != -1){
-                hardware_command_floor_indicator_on(current_floor);
-                previous_legal_floor = current_floor;
-            }
-                if (queue_complete_orders_floor(&head, current_floor, previous_direction)){
-                    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-                    queue_remove_completed_orders(&head, current_floor);
+            // current_floor = return_legal_floor();
+            // if (current_floor != -1){
+            //     hardware_command_floor_indicator_on(current_floor);
+            //     previous_legal_floor = current_floor;
+            // }
+            //     if (queue_complete_orders_floor(&head, current_floor, previous_direction)){
+            //         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+            //         queue_remove_completed_orders(&head, current_floor);
 
-                    hardware_command_door_open(1);
-                    elevator_state = STATE_DOOR_OPEN;
+            //         hardware_command_door_open(1);
+            //         elevator_state = STATE_DOOR_OPEN;
+            // }
+            if (moving_handler(&head, previous_direction, &current_floor, &previous_legal_floor)){
+                hardware_command_door_open(1); //opens door
+                elevator_state = STATE_DOOR_OPEN;
             }
             break;
 
@@ -111,8 +115,8 @@ int main(){
                 hardware_command_door_open(1);
                 elevator_state = STATE_DOOR_OPEN;
             }
-        
             break;
+            
         default: 
             fprintf(stderr, "Out of state machine. Shutting down. \n");
             exit(1);

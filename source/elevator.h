@@ -68,4 +68,10 @@ void idle_between_floors(queue_node ** head, HardwareMovement* previous_directio
  */
 void idle_on_floor(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement* between_floor_direction, int current_floor);
 
+/**
+ * @brief Decides if the elevator should stop at a floor and complete an order. 
+ * @return 1 if the elevator should stop and complete order. 0 otherwise. 
+ */
+int moving_handler(queue_node ** head, HardwareMovement previous_direction, int* current_floor, int* previous_legal_floor);
+
 #endif
