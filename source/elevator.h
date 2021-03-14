@@ -2,6 +2,12 @@
 #include <time.h>
 #include "order_queue.h"
 
+#ifndef ELEVATOR_H
+#define ELEVATOR_H
+#define TIMER_DURATION 3
+
+
+
 /**
  * @brief Initializes the elevator states and starting position.
  * Must be called once before other calls to the elevator control software. 
@@ -56,3 +62,10 @@ void set_floor_indicator();
  * @brief Sets movement when idle between floors. 
  */
 void idle_between_floors(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement between_floor_direction, int previous_legal_floor);
+
+/**
+ * @brief Sets movement when idle on a floor. 
+ */
+void idle_on_floor(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement* between_floor_direction, int current_floor);
+
+#endif

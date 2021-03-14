@@ -150,3 +150,20 @@ void idle_between_floors(queue_node ** head, HardwareMovement* previous_directio
         *previous_direction = HARDWARE_MOVEMENT_DOWN;
     }    
 }
+void idle_on_floor(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement* between_floor_direction, int current_floor){
+    if (current_floor == (*head)->floor){
+        /* Do nothing */
+    }
+    else if (current_floor < (*head)->floor){
+        hardware_command_movement(HARDWARE_MOVEMENT_UP);
+        *previous_direction = HARDWARE_MOVEMENT_UP;
+        *between_floor_direction = HARDWARE_MOVEMENT_UP;
+
+    }
+    else{
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        *previous_direction = HARDWARE_MOVEMENT_DOWN;
+        *between_floor_direction = HARDWARE_MOVEMENT_DOWN;
+
+    }
+}

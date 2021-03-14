@@ -1,5 +1,6 @@
 #include "hardware.h"
-
+#ifndef ORDER_QUEUE_H
+#define ORDER_QUEUE_H
 /**
  * @brief Node that contains the information for a spesific order. 
  */
@@ -13,7 +14,7 @@ typedef struct node {
 /**
  * @brief Removes the first order.
  */
-void pop(queue_node ** head);
+void queue_pop(queue_node ** head);
 
 /**
  * @brief Adds an order to the end of the list
@@ -48,3 +49,5 @@ int queue_is_empty(queue_node **head);
  * @return 1 if ignore, 0 otherwise. 
  */
 int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction);
+
+#endif

@@ -102,6 +102,7 @@ int queue_is_empty(queue_node **head) {
     }
     return 0;
 } 
+
 int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction){
     
     if ((*head)->order_type == HARDWARE_ORDER_INSIDE){
@@ -123,3 +124,4 @@ int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovemen
     }
     return 0; 
 }
+

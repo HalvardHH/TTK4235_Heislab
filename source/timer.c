@@ -8,6 +8,9 @@
 /**
  * @brief Returns current time.
  */
+
+#define TIMER_DURATION 3
+
 clock_t get_time(){
     return clock();
 }
