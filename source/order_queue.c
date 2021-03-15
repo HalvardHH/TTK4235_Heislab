@@ -39,10 +39,11 @@ int queue_complete_orders_floor(queue_node **head, int floor, HardwareMovement p
             return 1; 
         }
     }
-    
+    int lowest_ordered_floor = queue_lowest_order(head);
+    int highest_ordered_floor = queue_highest_order(head);
     while (current != NULL){
         if (current->floor == floor){
-            if (!queue_check_if_ignore(&current, floor, previous_direction)){
+            if (!queue_check_if_ignore(&current, floor, previous_direction, lowest_ordered_floor, highest_ordered_floor)){
                 return 1;
             }
         }
@@ -103,7 +104,7 @@ int queue_is_empty(queue_node **head) {
     return 0;
 } 
 
-int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction){
+int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction, int lowest_ordered_floor, int highest_ordered_floor){
     
     if ((*head)->order_type == HARDWARE_ORDER_INSIDE){
         return 0; 
@@ -113,15 +114,50 @@ int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovemen
 
         if (previous_direction == HARDWARE_MOVEMENT_UP){
             if ((*head)->order_type == HARDWARE_ORDER_DOWN && (*head)->floor != HARDWARE_NUMBER_OF_FLOORS-1){
-                return 1;
+                if ((*head)->floor < highest_ordered_floor){
+                    return 1;
+                }
+                return 0;
             }
         }
         else if (previous_direction == HARDWARE_MOVEMENT_DOWN && (*head)->floor != 0){
             if ((*head)->order_type == HARDWARE_ORDER_UP){
-                return 1; 
+                if ((*head)->floor > lowest_ordered_floor){
+                    return 1;
+                }
+                return 0; 
             }
         }
     }
     return 0; 
 }
+
+int queue_highest_order(queue_node ** head){
+    queue_node * current = *head;
+    int retval = 0; 
+    while (current != NULL){
+        if (current->floor > retval){
+            retval = current->floor;
+        }
+        current = current->next;
+    }
+    return retval;
+
+}
+
+
+int queue_lowest_order(queue_node ** head){
+    queue_node * current = *head;
+    int retval = HARDWARE_NUMBER_OF_FLOORS; 
+    while (current != NULL){
+        if (current->floor < retval){
+            retval = current->floor;
+        }
+    current = current->next;
+
+    }
+    return retval;
+
+}
+
 

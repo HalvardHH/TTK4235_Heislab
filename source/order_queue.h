@@ -48,6 +48,10 @@ int queue_is_empty(queue_node **head);
  * @brief Checks if an order should be ignored
  * @return 1 if ignore, 0 otherwise. 
  */
-int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction);
+int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction, int lowest_ordered_floor, int highest_ordered_floor);
+
+int queue_highest_order(queue_node ** head);
+
+int queue_lowest_order(queue_node ** head);
 
 #endif
