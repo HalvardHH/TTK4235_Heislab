@@ -45,22 +45,10 @@ int main(){
             break;
 
         case STATE_MOVING:
-            current_floor = return_legal_floor();
-            if (current_floor != -1){
-                hardware_command_floor_indicator_on(current_floor);
-                previous_legal_floor = current_floor;
+            if (moving_handler(&head, previous_direction, &current_floor, &previous_legal_floor)){
+                hardware_command_door_open(1); //opens door
+                elevator_state = STATE_DOOR_OPEN;
             }
-                if (queue_complete_orders_floor(&head, current_floor, previous_direction)){
-                    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-                    queue_remove_completed_orders(&head, current_floor);
-
-                    hardware_command_door_open(1);
-                    elevator_state = STATE_DOOR_OPEN;
-            }
-            // if (moving_handler(&head, previous_direction, &current_floor, &previous_legal_floor)){
-            //     hardware_command_door_open(1); //opens door
-            //     elevator_state = STATE_DOOR_OPEN;
-            // }
             break;
 
         case STATE_DOOR_OPEN:
