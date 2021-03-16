@@ -14,14 +14,14 @@ int main(){
         exit(1);
     }
 
-    ElevatorState g_elevator_state; 
-    int g_timer_already_started = 0; 
-    clock_t g_timer_start = clock(); 
-    HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
-    HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
-    int g_previous_legal_floor;
-    int g_current_floor = elevator_current_floor();
-    queue_node *head = NULL;  
+    // ElevatorState g_elevator_state; 
+    // int g_timer_already_started = 0; 
+    // clock_t g_timer_start = clock(); 
+    // HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
+    // HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
+    // int g_previous_legal_floor;
+    // int g_current_floor = elevator_current_floor();
+    // queue_node *head = NULL;  
 
     elevator_software_init(&g_elevator_state, &g_previous_legal_floor);
     
@@ -30,23 +30,24 @@ int main(){
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
             g_elevator_state = STATE_STOP_BUTTON_PRESSED;
         }
-        elevator_poll_order_buttons(&head);
+        elevator_add_order_if_button_pressed(&g_elevator_order_list);
+
         switch (g_elevator_state)
         {
         case STATE_IDLE:
-            if (head != NULL){
+            if (g_elevator_order_list != NULL){
                 if (g_current_floor == -1){
-                   elevator_idle_between_floors(&head, &g_previous_direction, g_between_floor_direction, g_previous_legal_floor);
+                   elevator_set_movement_when_between_floors(&g_elevator_order_list, &g_previous_direction, g_between_floor_direction, g_previous_legal_floor);
                 }
                 else{
-                    elevator_idle_on_floor(&head, &g_previous_direction, &g_between_floor_direction, g_current_floor);
+                    elevator_set_movement_when_on_floor(&g_elevator_order_list, &g_previous_direction, &g_between_floor_direction, g_current_floor);
                 }
                 g_elevator_state = STATE_MOVING;
             }
             break;
 
         case STATE_MOVING:
-            if (elevator_complete_order_at_current_floor(&head, g_previous_direction, &g_current_floor, &g_previous_legal_floor)){
+            if (elevator_complete_order_at_current_floor(&g_elevator_order_list, g_previous_direction, &g_current_floor, &g_previous_legal_floor)){
                 hardware_command_door_open(1); //opens door
                 g_elevator_state = STATE_DOOR_OPEN;
             }
@@ -60,7 +61,7 @@ int main(){
             break;
 
         case STATE_STOP_BUTTON_PRESSED:
-            if (elevator_stop_button_pressed(&head)){
+            if (elevator_stop_button_pressed(&g_elevator_order_list)){
                 g_elevator_state = STATE_IDLE;
             }
             else{

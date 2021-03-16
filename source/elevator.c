@@ -8,15 +8,15 @@
 
 
 
-void elevator_software_init(ElevatorState* g_elevator_state, int* g_previous_legal_floor){
+void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor){
     
-    *g_elevator_state = STATE_IDLE;
+    *elevator_state = STATE_IDLE;
     elevator_clear_all_order_lights();
     
     while (elevator_current_floor() == -1) {
         if(hardware_read_stop_signal()){
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-            *g_elevator_state = STATE_STOP_BUTTON_PRESSED; 
+            *elevator_state = STATE_STOP_BUTTON_PRESSED; 
             fprintf(stderr, "Stop button pressed during initalization. Shutting down. \n");
             exit(1);
         }
@@ -24,8 +24,8 @@ void elevator_software_init(ElevatorState* g_elevator_state, int* g_previous_leg
     }
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
     
-    *g_previous_legal_floor = elevator_current_floor();
-    hardware_command_floor_indicator_on(*g_previous_legal_floor);
+    *previous_legal_floor = elevator_current_floor();
+    hardware_command_floor_indicator_on(*previous_legal_floor);
 }
 
 
@@ -96,7 +96,7 @@ int elevator_current_floor() {
     return -1;
 }
 
-void elevator_poll_order_buttons(queue_node ** head) { //only turns on light
+void elevator_add_order_if_button_pressed(queue_node ** head) { //only turns on light
     for (int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++) {
         if ( (hardware_read_order(i, HARDWARE_ORDER_INSIDE)) && 
         (!queue_check_duplicate_orders(head, i, HARDWARE_ORDER_INSIDE ))){
@@ -132,57 +132,57 @@ void elevator_set_floor_indicator() {
     }
 }
 
-void elevator_idle_between_floors(queue_node ** head, HardwareMovement* g_previous_direction, HardwareMovement g_between_floor_direction, int g_previous_legal_floor){
-    if (g_previous_legal_floor == (*head)->floor){
-        if (g_between_floor_direction == HARDWARE_MOVEMENT_DOWN){
+void elevator_set_movement_when_between_floors(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement between_floor_direction, int previous_legal_floor){
+    if (previous_legal_floor == (*head)->floor){
+        if (between_floor_direction == HARDWARE_MOVEMENT_DOWN){
             hardware_command_movement(HARDWARE_MOVEMENT_UP);
-            *g_previous_direction = HARDWARE_MOVEMENT_UP;
+            *previous_direction = HARDWARE_MOVEMENT_UP;
         }
     
          else{
             hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-            *g_previous_direction = HARDWARE_MOVEMENT_DOWN;
+            *previous_direction = HARDWARE_MOVEMENT_DOWN;
         }
     }
                 
-    else if (g_previous_legal_floor < (*head)->floor){
+    else if (previous_legal_floor < (*head)->floor){
         hardware_command_movement(HARDWARE_MOVEMENT_UP);
-        *g_previous_direction = HARDWARE_MOVEMENT_UP;
+        *previous_direction = HARDWARE_MOVEMENT_UP;
     }
                     
     else{
         hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-        *g_previous_direction = HARDWARE_MOVEMENT_DOWN;
+        *previous_direction = HARDWARE_MOVEMENT_DOWN;
     }    
 }
-void elevator_idle_on_floor(queue_node ** head, HardwareMovement* g_previous_direction, HardwareMovement* g_between_floor_direction, int g_current_floor){
-    if (g_current_floor == (*head)->floor){
+void elevator_set_movement_when_on_floor(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement* between_floor_direction, int current_floor){
+    if (current_floor == (*head)->floor){
         /* Do nothing */
     }
-    else if (g_current_floor < (*head)->floor){
+    else if (current_floor < (*head)->floor){
         hardware_command_movement(HARDWARE_MOVEMENT_UP);
-        *g_previous_direction = HARDWARE_MOVEMENT_UP;
-        *g_between_floor_direction = HARDWARE_MOVEMENT_UP;
+        *previous_direction = HARDWARE_MOVEMENT_UP;
+        *between_floor_direction = HARDWARE_MOVEMENT_UP;
 
     }
     else{
         hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-        *g_previous_direction = HARDWARE_MOVEMENT_DOWN;
-        *g_between_floor_direction = HARDWARE_MOVEMENT_DOWN;
+        *previous_direction = HARDWARE_MOVEMENT_DOWN;
+        *between_floor_direction = HARDWARE_MOVEMENT_DOWN;
 
     }
 }
 
-int elevator_complete_order_at_current_floor(queue_node ** head, HardwareMovement g_previous_direction, int* g_current_floor, int* g_previous_legal_floor){
-    *g_current_floor = elevator_current_floor();
-    if (*g_current_floor != -1){
-        hardware_command_floor_indicator_on(*g_current_floor);
-        *g_previous_legal_floor = *g_current_floor;
+int elevator_complete_order_at_current_floor(queue_node ** head, HardwareMovement previous_direction, int* current_floor, int* previous_legal_floor){
+    *current_floor = elevator_current_floor();
+    if (*current_floor != -1){
+        hardware_command_floor_indicator_on(*current_floor);
+        *previous_legal_floor = *current_floor;
     }
     
-    if (queue_complete_orders_floor(head, *g_current_floor, g_previous_direction)){
+    if (queue_complete_orders_floor(head, *current_floor, g_previous_direction)){
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-        queue_remove_completed_orders(head, *g_current_floor);
+        queue_remove_completed_orders(head, *current_floor);
         return 1;
         
     }

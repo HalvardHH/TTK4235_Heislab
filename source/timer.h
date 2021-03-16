@@ -2,6 +2,8 @@
 #include <time.h>
 #ifndef TIMER_H
 #define TIMER_H
+int g_timer_already_started = 0; 
+
 /** 
  * @file
  * @brief Timer library
