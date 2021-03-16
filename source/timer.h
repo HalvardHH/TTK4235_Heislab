@@ -10,7 +10,6 @@
 /**
  * @brief Returns current time.
  */
-
 clock_t get_time();
 
 /**

@@ -25,7 +25,7 @@ void queue_push_back(queue_node ** head, int floor, HardwareOrder order_type);
  * @brief checks if the elevator should complete order at a floor
  * @return 1 if true , 0 otherwise
  */
-int queue_complete_orders_floor(queue_node **head, int floor, HardwareMovement previous_direction);
+int queue_complete_orders_floor(queue_node **head, int floor, HardwareMovement g_previous_direction);
 /**
  * @brief removes all orderes to or from selected floor and turns off light
  */
@@ -48,7 +48,7 @@ int queue_is_empty(queue_node **head);
  * @brief Checks if an order should be ignored
  * @return 1 if ignore, 0 otherwise. 
  */
-int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovement previous_direction, int lowest_ordered_floor, int highest_ordered_floor);
+int queue_check_if_ignore(queue_node ** head, int g_current_floor, HardwareMovement g_previous_direction, int lowest_ordered_floor, int highest_ordered_floor);
 
 int queue_highest_order(queue_node ** head);
 
