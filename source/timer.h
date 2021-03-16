@@ -2,7 +2,7 @@
 #include <time.h>
 #ifndef TIMER_H
 #define TIMER_H
-int g_timer_already_started = 0; 
+
 
 /** 
  * @file
@@ -13,7 +13,6 @@ int g_timer_already_started = 0;
  * @brief Returns current time.
  */
 clock_t get_time();
-
 /**
  * @brief Checks if a timer is done
  * @param start Start time for the timer.
