@@ -1,12 +1,8 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "elevator.h"
 #include "hardware.h"
 #include "timer.h"
-
-
 
 void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor){
     
@@ -27,8 +23,6 @@ void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_f
     *previous_legal_floor = elevator_current_floor();
     hardware_command_floor_indicator_on(*previous_legal_floor);
 }
-
-
 
 int elevator_door_timer(clock_t* g_timer_start, int timer_duration, int* g_timer_already_started){
     if (!*g_timer_already_started){
@@ -69,7 +63,6 @@ int elevator_stop_button_pressed(queue_node ** head){
         return 1;
     }
     return 0; 
-    
 }
 
 void elevator_clear_all_order_lights(){
@@ -155,6 +148,7 @@ void elevator_set_movement_when_between_floors(queue_node ** head, HardwareMovem
         *previous_direction = HARDWARE_MOVEMENT_DOWN;
     }    
 }
+
 void elevator_set_movement_when_on_floor(queue_node ** head, HardwareMovement* previous_direction, HardwareMovement* between_floor_direction, int current_floor){
     if (current_floor == (*head)->floor){
         /* Do nothing */
@@ -180,7 +174,7 @@ int elevator_complete_order_at_current_floor(queue_node ** head, HardwareMovemen
         *previous_legal_floor = *current_floor;
     }
     
-    if (queue_complete_orders_floor(head, *current_floor, g_previous_direction)){
+    if (queue_complete_orders_floor(head, *current_floor, previous_direction)){
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
         queue_remove_completed_orders(head, *current_floor);
         return 1;

@@ -5,23 +5,26 @@
 #include "elevator.h"
 
 
-
 int main(){
+    
+    ElevatorState g_elevator_state; 
+    queue_node *g_elevator_order_list = NULL;  
+
+    HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
+    HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
+
+    int g_previous_legal_floor;
+    int g_current_floor;
+
+    clock_t g_timer_start; 
+    int g_timer_already_started = 0; 
+
 
     int error = hardware_init();
     if(error != 0){
         fprintf(stderr, "Unable to initialize hardware\n");
         exit(1);
     }
-
-    // ElevatorState g_elevator_state; 
-    // int g_timer_already_started = 0; 
-    // clock_t g_timer_start = clock(); 
-    // HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
-    // HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
-    // int g_previous_legal_floor;
-    // int g_current_floor = elevator_current_floor();
-    // queue_node *head = NULL;  
 
     elevator_software_init(&g_elevator_state, &g_previous_legal_floor);
     

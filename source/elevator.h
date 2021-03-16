@@ -1,9 +1,9 @@
-
 #include <time.h>
 #include "order_queue.h"
 
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
+
 #define TIMER_DURATION 3
 
 /**
@@ -16,20 +16,6 @@ typedef enum {
     STATE_STOP_BUTTON_PRESSED,
     
 } ElevatorState;
-
-ElevatorState g_elevator_state; 
-queue_node *g_elevator_order_list = NULL;  
-
-HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
-HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
-
-int g_previous_legal_floor;
-int g_current_floor;
-
-clock_t g_timer_start; 
-int g_timer_already_started = 0; 
-
-
 
 /**
  * @brief Initializes g_elevator_state and the elevators starting position. 

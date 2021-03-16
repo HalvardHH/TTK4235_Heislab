@@ -3,12 +3,11 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-
 /** 
  * @file
  * @brief Timer library
  */
- #define TIMER_DURATION 3
+
 /**
  * @brief Returns current time.
  */
