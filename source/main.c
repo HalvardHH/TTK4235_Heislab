@@ -58,13 +58,14 @@ int main(){
 
         case STATE_DOOR_OPEN:
             if (elevator_door_timer(&g_timer_start, TIMER_DURATION, &g_timer_already_started)){
+                queue_remove_completed_orders(&g_elevator_order_list, g_current_floor);
                 hardware_command_door_open(0); //closes door
                 g_elevator_state = STATE_IDLE;
             }
             break;
 
         case STATE_STOP_BUTTON_PRESSED:
-            if (elevator_stop_button_pressed(&g_elevator_order_list)){
+            if (elevator_stop_button_pressed(&g_elevator_order_list, &g_timer_already_started)){
                 g_elevator_state = STATE_IDLE;
             }
             else{

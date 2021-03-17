@@ -81,6 +81,10 @@ int queue_complete_orders_floor(queue_node **head, int floor, HardwareMovement p
 }
 
 void queue_remove_completed_orders(queue_node ** head, int floor){
+    
+    if ((*head) == NULL){
+        return;
+    }
     while ((*head)->floor == floor){
         hardware_command_order_light(floor, (*head)->order_type,0);
         queue_pop(head);
@@ -88,9 +92,6 @@ void queue_remove_completed_orders(queue_node ** head, int floor){
         if ((*head) == NULL){
             return;
         }
-    }
-    if ((*head) == NULL){
-        return;
     }
 
     queue_node * prev = (*head);

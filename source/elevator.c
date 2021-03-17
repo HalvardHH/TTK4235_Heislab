@@ -39,8 +39,9 @@ int elevator_door_timer(clock_t* g_timer_start, int timer_duration, int* g_timer
     return 0;
 }
 
-int elevator_stop_button_pressed(queue_node ** head){
+int elevator_stop_button_pressed(queue_node ** head, int* timer_already_started){
     int between_floors = 1;
+    *timer_already_started = 0;
     hardware_command_stop_light(1);
     while ((*head) != NULL){
         queue_pop(head);
@@ -176,7 +177,7 @@ int elevator_complete_order_at_current_floor(queue_node ** head, HardwareMovemen
     
     if (queue_complete_orders_floor(head, *current_floor, previous_direction)){
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-        queue_remove_completed_orders(head, *current_floor);
+        // queue_remove_completed_orders(head, *current_floor);
         return 1;
         
     }

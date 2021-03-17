@@ -49,8 +49,11 @@ int elevator_door_timer(clock_t* timer_start, int timer_duration, int* timer_alr
 /**
  * @brief Turns on the stoplight, deletes orders and opens the door if the elevator is at a legal floor.
  * @param head Start of a queue_node linked_list. 
+ * @param timer_already_started Bool to check if the timer has been started. 1 if started, 0 otherwise
+ * 
+ * @return 1 if the elevator is between floors, 0 otherwise. 
  */
-int elevator_stop_button_pressed(queue_node ** head);
+int elevator_stop_button_pressed(queue_node ** head, int* timer_already_started);
 
 /**
  * @brief Checks if the elevator is at a legal floor.
