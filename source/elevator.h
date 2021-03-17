@@ -17,6 +17,18 @@ typedef enum {
     
 } ElevatorState;
 
+static ElevatorState g_elevator_state; 
+static queue_node *g_elevator_order_list = NULL;  
+
+static HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
+static HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
+
+static int g_previous_legal_floor;
+static int g_current_floor;
+
+static clock_t g_timer_start; 
+static int g_timer_already_started = 0; 
+
 /**
  * @brief Initializes g_elevator_state and the elevators starting position. 
  * Changes g_previous_legal_floor

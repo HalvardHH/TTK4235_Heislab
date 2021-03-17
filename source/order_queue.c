@@ -131,27 +131,24 @@ int queue_check_if_ignore(queue_node ** head, int current_floor, HardwareMovemen
     if ((*head)->order_type == HARDWARE_ORDER_INSIDE){
         return 0; 
     }
-
-    if ((*head)->floor == current_floor){
-
-        if (previous_direction == HARDWARE_MOVEMENT_UP){
-            if ((*head)->order_type == HARDWARE_ORDER_DOWN && (*head)->floor != HARDWARE_NUMBER_OF_FLOORS-1){
-                if ((*head)->floor < highest_ordered_floor){
-                    return 1;
-                }
-                return 0;
+    if (previous_direction == HARDWARE_MOVEMENT_UP){
+        if ((*head)->order_type == HARDWARE_ORDER_DOWN && (*head)->floor != HARDWARE_NUMBER_OF_FLOORS-1){
+            if ((*head)->floor < highest_ordered_floor){
+                return 1;
             }
-        }
-        else if (previous_direction == HARDWARE_MOVEMENT_DOWN && (*head)->floor != 0){
-            if ((*head)->order_type == HARDWARE_ORDER_UP){
-                if ((*head)->floor > lowest_ordered_floor){
-                    return 1;
-                }
-                return 0; 
-            }
+            return 0;
         }
     }
-    return 0; 
+
+    else if (previous_direction == HARDWARE_MOVEMENT_DOWN && (*head)->floor != 0){
+        if ((*head)->order_type == HARDWARE_ORDER_UP){
+            if ((*head)->floor > lowest_ordered_floor){
+                return 1;
+            }
+            return 0; 
+        }
+    }
+return 0; 
 }
 
 

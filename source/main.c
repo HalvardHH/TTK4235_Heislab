@@ -7,17 +7,17 @@
 
 int main(){
     
-    ElevatorState g_elevator_state; 
-    queue_node *g_elevator_order_list = NULL;  
+    // ElevatorState g_elevator_state; 
+    // queue_node *g_elevator_order_list = NULL;  
 
-    HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
-    HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
+    // HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
+    // HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
 
-    int g_previous_legal_floor;
-    int g_current_floor;
+    // int g_previous_legal_floor;
+    // int g_current_floor;
 
-    clock_t g_timer_start; 
-    int g_timer_already_started = 0; 
+    // clock_t g_timer_start; 
+    // int g_timer_already_started = 0; 
 
 
     int error = hardware_init();
@@ -51,7 +51,7 @@ int main(){
 
         case STATE_MOVING:
             if (elevator_complete_order_at_current_floor(&g_elevator_order_list, g_previous_direction, &g_current_floor, &g_previous_legal_floor)){
-                hardware_command_door_open(1); //opens door
+                hardware_command_door_open(1); 
                 g_elevator_state = STATE_DOOR_OPEN;
             }
             break;
@@ -59,7 +59,7 @@ int main(){
         case STATE_DOOR_OPEN:
             if (elevator_door_timer(&g_timer_start, TIMER_DURATION, &g_timer_already_started)){
                 queue_remove_completed_orders(&g_elevator_order_list, g_current_floor);
-                hardware_command_door_open(0); //closes door
+                hardware_command_door_open(0); 
                 g_elevator_state = STATE_IDLE;
             }
             break;

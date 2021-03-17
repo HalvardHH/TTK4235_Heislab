@@ -154,7 +154,14 @@ void elevator_set_movement_when_on_floor(queue_node ** head, HardwareMovement* p
     if (current_floor == (*head)->floor){
         /* Do nothing */
     }
-    else if (current_floor < (*head)->floor){
+    queue_node * current = *head;
+    int lowest_ordered_floor = queue_lowest_order(head);
+    int highest_ordered_floor = queue_highest_order(head);
+    while (queue_check_if_ignore(&current, current_floor, *previous_direction, lowest_ordered_floor, highest_ordered_floor)){
+            current = current->next;
+    }
+    
+    if (current_floor < (current)->floor){
         hardware_command_movement(HARDWARE_MOVEMENT_UP);
         *previous_direction = HARDWARE_MOVEMENT_UP;
         *between_floor_direction = HARDWARE_MOVEMENT_UP;
