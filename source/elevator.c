@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "elevator.h"
 #include "hardware.h"
 #include "timer.h"
 
-void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor){
+/**
+ * @file
+ * @brief Implementation file for the elevator.
+ */
+
+void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor, int* current_floor){
     
     *elevator_state = STATE_IDLE;
     elevator_clear_all_order_lights();
@@ -21,19 +27,20 @@ void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_f
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
     
     *previous_legal_floor = elevator_current_floor();
+    *current_floor = elevator_current_floor();
     hardware_command_floor_indicator_on(*previous_legal_floor);
 }
 
-int elevator_door_timer(clock_t* g_timer_start, int timer_duration, int* g_timer_already_started){
-    if (!*g_timer_already_started){
-        *g_timer_start = get_time();
-        *g_timer_already_started = 1; 
+int elevator_door_timer(clock_t* timer_start, int timer_duration, int* timer_already_started){
+    if (!*timer_already_started){
+        *timer_start = timer_get_time();
+        *timer_already_started = 1; 
     }
     if (hardware_read_obstruction_signal()){
-        *g_timer_start = get_time();
+        *timer_start = timer_get_time();
     }
-    if (check_timer_done(*g_timer_start, timer_duration)){
-        *g_timer_already_started = 0; 
+    if (timer_check_timer_done(*timer_start, timer_duration)){
+        *timer_already_started = 0; 
         return 1;
     }   
     return 0;

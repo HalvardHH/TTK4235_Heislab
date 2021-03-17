@@ -1,10 +1,15 @@
 #include <time.h>
-#include "order_queue.h"
+#include "queue.h"
 
 #ifndef ELEVATOR_H
 #define ELEVATOR_H
 
 #define TIMER_DURATION 3
+
+/**
+ * @file
+ * @brief Elevator library.
+ */
 
 /**
  * @brief States for the state machine that controls the elevator.
@@ -39,7 +44,7 @@ static int g_timer_already_started = 0;
  * 
  * @return 0 on success. Non-zero for failure.
  */
-void elevator_software_init(ElevatorState* g_elevator_state, int* g_previous_legal_floor);
+void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor, int* current_floor);
 
 /**
  * @brief Turns off the all the order lights. 

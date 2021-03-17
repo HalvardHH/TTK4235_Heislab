@@ -4,30 +4,21 @@
 #include "hardware.h"
 #include "elevator.h"
 
+/**
+ * @file
+ * @brief The main file of the application.
+ * 
+ * \mainpage TTK4235 Heislab
+ */
 
 int main(){
-    
-    // ElevatorState g_elevator_state; 
-    // queue_node *g_elevator_order_list = NULL;  
-
-    // HardwareMovement g_previous_direction = HARDWARE_MOVEMENT_STOP;
-    // HardwareMovement g_between_floor_direction = HARDWARE_MOVEMENT_STOP;
-
-    // int g_previous_legal_floor;
-    // int g_current_floor;
-
-    // clock_t g_timer_start; 
-    // int g_timer_already_started = 0; 
-
-
     int error = hardware_init();
     if(error != 0){
         fprintf(stderr, "Unable to initialize hardware\n");
         exit(1);
     }
 
-    elevator_software_init(&g_elevator_state, &g_previous_legal_floor);
-    
+    elevator_software_init(&g_elevator_state, &g_previous_legal_floor, &g_current_floor);
     while(1){
         if(hardware_read_stop_signal()){
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
@@ -75,9 +66,7 @@ int main(){
             break;
             
         default: 
-            fprintf(stderr, "Out of state machine. Shutting down. \n");
-            exit(1);
-
+            elevator_software_init(&g_elevator_state, &g_previous_legal_floor, &g_current_floor);
         }
     }
 }

@@ -1,6 +1,12 @@
 #include "hardware.h"
-#ifndef ORDER_QUEUE_H
-#define ORDER_QUEUE_H
+#ifndef QUEUE_H
+#define QUEUE_H
+
+/**
+ * @file
+ * @brief Queue library.
+ */
+
 /**
  * @brief Node that contains the information for a spesific order. 
  * @param floor The ordered floor.

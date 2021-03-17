@@ -1,7 +1,14 @@
-#include "hardware.h"
-#include "order_queue.h"
 #include <stdio.h>
 #include <stdlib.h>
+
+#include "hardware.h"
+#include "queue.h"
+
+/**
+ * @file
+ * @brief Implementation file for the queue.
+ */
+
 void queue_pop(queue_node ** head){
     if ((*head) == NULL){
         return;
@@ -10,6 +17,7 @@ void queue_pop(queue_node ** head){
     free(*head);
     *head = next_node; 
 }
+
 void queue_push_back(queue_node ** head, int floor, HardwareOrder order_type){
     if ((*head) == NULL){
         (*head) = malloc(sizeof(queue_node));
