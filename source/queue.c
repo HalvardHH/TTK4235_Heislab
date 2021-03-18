@@ -6,7 +6,7 @@
 
 /**
  * @file
- * @brief Implementation file for the queue.
+ * @brief Implementation file for the queue library.
  */
 
 void queue_pop(queue_node ** head){

@@ -11,6 +11,10 @@
  * \mainpage TTK4235 Heislab
  */
 
+/**
+ * @brief Initalizes the elevator and runs the elevator control loop and switch_case.
+ * 
+ */
 int main(){
     int error = hardware_init();
     if(error != 0){

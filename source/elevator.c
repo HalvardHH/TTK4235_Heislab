@@ -7,7 +7,7 @@
 
 /**
  * @file
- * @brief Implementation file for the elevator.
+ * @brief Implementation file for the elevator library.
  */
 
 void elevator_software_init(ElevatorState* elevator_state, int* previous_legal_floor, int* current_floor){
@@ -191,7 +191,6 @@ int elevator_complete_order_at_current_floor(queue_node ** head, HardwareMovemen
     
     if (queue_complete_orders_floor(head, *current_floor, previous_direction)){
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-        // queue_remove_completed_orders(head, *current_floor);
         return 1;
         
     }

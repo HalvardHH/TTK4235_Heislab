@@ -2,7 +2,7 @@
 
 /**
  * @file
- * @brief Implementation file for the timer.
+ * @brief Implementation file for the timer library.
  */
 
 clock_t timer_get_time(){
